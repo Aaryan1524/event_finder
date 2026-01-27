@@ -20,7 +20,7 @@ export function Navbar({ variant = "default" }: NavbarProps) {
             <div className="w-full px-6 md:px-8 flex h-14 items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
-                        <span className="text-xl font-bold tracking-tight">VibeCheck</span>
+                        <span className="text-xl font-bold tracking-tight select-none">VibeCheck</span>
                     </Link>
                 </div>
 

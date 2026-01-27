@@ -29,7 +29,7 @@ export function FilterBar({ className, variant = "default" }: FilterBarProps) {
                             filter === category && "bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                         )}>
                             <span className={cn(
-                                "text-sm font-medium whitespace-nowrap",
+                                "text-sm font-medium whitespace-nowrap select-none",
                                 filter === category ? "text-white font-bold" : "text-white/80"
                             )}>
                                 {category}
