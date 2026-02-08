@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+
 export default function EventMap({ location }: { location?: Event }) {
-    const { setSelectedEvent, selectedEventId, locateTrigger } = useEventStore();
+    const { setSelectedEvent, selectedEventId, locateTrigger, zoomInTrigger, zoomOutTrigger } = useEventStore();
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
     const mapRef = useRef<MapRef>(null);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -43,6 +44,20 @@ export default function EventMap({ location }: { location?: Event }) {
         }
     }, [locateTrigger]);
 
+    // Watch for zoom in trigger
+    useEffect(() => {
+        if (zoomInTrigger > 0) {
+            handleZoomIn();
+        }
+    }, [zoomInTrigger]);
+
+    // Watch for zoom out trigger
+    useEffect(() => {
+        if (zoomOutTrigger > 0) {
+            handleZoomOut();
+        }
+    }, [zoomOutTrigger]);
+
     useEffect(() => {
         if ("geolocation" in navigator) {
             // ... existing geolocation init ...
@@ -70,6 +85,26 @@ export default function EventMap({ location }: { location?: Event }) {
                 center: [userLocation.lng, userLocation.lat],
                 zoom: 14,
                 duration: 2000
+            });
+        }
+    };
+
+    const handleZoomIn = () => {
+        if (mapRef.current) {
+            const currentZoom = mapRef.current.getZoom();
+            mapRef.current.flyTo({
+                zoom: currentZoom + 1,
+                duration: 300
+            });
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (mapRef.current) {
+            const currentZoom = mapRef.current.getZoom();
+            mapRef.current.flyTo({
+                zoom: currentZoom - 1,
+                duration: 300
             });
         }
     };
@@ -215,7 +250,7 @@ export default function EventMap({ location }: { location?: Event }) {
                     </Popup>
                 )}
             </Map>
-
+            
         </div>
     );
 }

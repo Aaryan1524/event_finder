@@ -10,10 +10,9 @@ import { MOCK_EVENTS } from "@/lib/data";
 import { EventCard } from "./EventCard";
 import { useState } from "react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
-import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
 import { useEventStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { MapControls } from "./MapControls";
 
 export function EventsDrawer() {
     const [snap, setSnap] = useState<number | string | null>(0.25);
@@ -33,20 +32,8 @@ export function EventsDrawer() {
             dismissible={false}
         >
             <DrawerContent showOverlay={false} className="h-full max-h-[96vh] fixed bottom-0 left-0 right-0 z-50 flex flex-col bg-transparent border-none outline-none shadow-none">
-                {/* Attached Locate Button */}
-                <div className="absolute -top-16 right-4 z-50">
-                    <LiquidGlass className="rounded-full shadow-lg">
-                        <Button
-                            onClick={() => useEventStore.getState().triggerLocate()}
-                            variant="ghost"
-                            size="icon"
-                            className="h-12 w-12 rounded-full hover:bg-white/10 text-white"
-                        >
-                            <MapPin className="h-5 w-5" />
-                            <span className="sr-only">Locate Me</span>
-                        </Button>
-                    </LiquidGlass>
-                </div>
+                {/* Attached Map Controls */}
+                <MapControls />
 
                 <LiquidGlass className="h-full w-full rounded-t-3xl">
                     <div className="flex flex-col h-full">

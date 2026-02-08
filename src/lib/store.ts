@@ -13,6 +13,10 @@ interface EventState {
     isJoined: (eventId: string) => boolean;
     locateTrigger: number;
     triggerLocate: () => void;
+    zoomInTrigger: number;
+    triggerZoomIn: () => void;
+    zoomOutTrigger: number;
+    triggerZoomOut: () => void;
 }
 
 export const useEventStore = create<EventState>((set, get) => ({
@@ -34,4 +38,8 @@ export const useEventStore = create<EventState>((set, get) => ({
     isJoined: (eventId) => get().myRsvps.includes(eventId),
     locateTrigger: 0,
     triggerLocate: () => set((state) => ({ locateTrigger: state.locateTrigger + 1 })),
+    zoomInTrigger: 0,
+    triggerZoomIn: () => set((state) => ({ zoomInTrigger: state.zoomInTrigger + 1 })),
+    zoomOutTrigger: 0,
+    triggerZoomOut: () => set((state) => ({ zoomOutTrigger: state.zoomOutTrigger + 1 })),
 }));
