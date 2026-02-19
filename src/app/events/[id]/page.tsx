@@ -7,12 +7,7 @@ import { Calendar, Clock, MapPin, Share2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/features/Navbar";
-import { AddToCalendarButton } from "@/components/features/AddToCalendarButton";
-import { ScheduleBadge } from "@/components/features/ScheduleBadge";
-import { useEventStore } from "@/lib/store";
-import { calculateCompatibility, detectConflict } from "@/lib/schedule-analyzer";
-import { useMemo } from "react";
-import { use } from "react";
+import MapWrapper from "@/components/features/MapWrapper";
 
 export default function EventPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -117,15 +112,24 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
                     </div>
                 </section>
 
-                <section className="space-y-3">
-                    <h3 className="text-lg font-semibold">Location</h3>
-                    <div className="aspect-video w-full rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
-                        <div className="flex flex-col items-center gap-2">
-                            <MapPin className="h-8 w-8" />
-                            <span>Map Preview Placeholder</span>
+                {event.isPrivate ? (
+                    <section className="space-y-3">
+                        <h3 className="text-lg font-semibold">Location</h3>
+                        <div className="aspect-video w-full rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
+                            <div className="flex flex-col items-center gap-2">
+                                <MapPin className="h-8 w-8" />
+                                <span>RSVP to see location</span>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                ) : (
+                    <section className="space-y-3">
+                        <h3 className="text-lg font-semibold">Location</h3>
+                        <div className="aspect-video w-full rounded-xl overflow-hidden bg-muted">
+                            <MapWrapper location={event} />
+                        </div>
+                    </section>
+                )}
             </main>
 
             <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
