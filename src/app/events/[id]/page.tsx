@@ -8,6 +8,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/features/Navbar";
 import MapWrapper from "@/components/features/MapWrapper";
+import {use, useMemo} from "react";
+import {useEventStore} from "@/lib/store";
+import {calculateCompatibility, detectConflict} from "@/lib/schedule-analyzer";
+import {ScheduleBadge} from "@/components/features/ScheduleBadge";
+import {AddToCalendarButton} from "@/components/features/AddToCalendarButton";
 
 export default function EventPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
