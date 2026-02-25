@@ -15,28 +15,44 @@ const pool = mysql.createPool({
     enableKeepAlive: true
 });
 
+let rooms = {};
+
+function broadcastToRoom(room, msgType, msg, socketToExclude = null) {
+    if(!rooms[room]) return;
+
+    rooms[room].forEach(socket => {
+        if(socket === socketToExclude) return;
+        socket.emit(msgType, msg);
+    });
+}
+
 io.on('connection', async socket => {
-    const id = socket.id;
-    console.log(`Client connected: ${id}`);
-    socket.broadcast.emit('join', { id });
 
-    socket.on('disconnect', () => {
-        console.log(`Client disconnected: ${id}`);
-        io.emit('leave', { id });
-    });
+    socket.on('join', msg => {
+        const { room, username } = msg;
+        rooms[room] = rooms[room] ?? new Set();
+        rooms[room].add(socket);
+        broadcastToRoom(room, 'join', { username }, socket);
 
-    socket.on('message', async msg => {
-        socket.broadcast.emit('message', msg);
-        const { id, message } = msg;
-        try {
-            await pool.query(
-                'INSERT INTO message_history VALUES (?, ?, NOW())',
-                [ id, message ]
+
+        socket.on('disconnect', () => {
+            rooms[room].delete(socket);
+            broadcastToRoom(room, 'leave', { username });
+        });
+
+        socket.on('message', async msg => {
+            broadcastToRoom(room, 'message', msg, socket);
+            const { username, message } = msg;
+            await pool.execute(
+                'INSERT INTO message_history VALUES (?, ?, ?, NOW())',
+                [room, username, message]
             );
-        } catch (err) {
-            console.error(`Error writing to database: ${err}`);
-        }
+        });
+
+
+
     });
+
 });
 
 server.listen(8080);
