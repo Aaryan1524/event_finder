@@ -21,3 +21,4 @@ io.on('connection', async socket => {
 });
 
 server.listen(8080);
+console.log('socket.io server listening on 8080!');
