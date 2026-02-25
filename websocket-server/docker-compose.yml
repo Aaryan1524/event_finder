@@ -17,7 +17,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: messages
-      MYSQL_USER: root
+      MYSQL_USER: socket
     ports:
         - "3306:3306"
     networks:
