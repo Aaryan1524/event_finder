@@ -205,9 +205,11 @@ export default function EventMap({ location }: { location?: Event }) {
                                         <img src={selectedEvent.host.avatar} alt={selectedEvent.host.name} className="h-5 w-5 rounded-full object-cover" />
                                         <span className="text-xs font-medium text-muted-foreground truncate max-w-[80px]">{selectedEvent.host.name}</span>
                                     </div>
-                                    <Link href={`events/${selectedEvent.id}/chat`}>
-                                        <MessageCircle className="h-4 w-4 text-muted-foreground"/>
-                                    </Link>
+                                    {!selectedEvent.isPrivate && (
+                                        <Link href={`events/${selectedEvent.id}/chat`}>
+                                            <MessageCircle className="h-4 w-4 text-muted-foreground"/>
+                                        </Link>
+                                    )}
                                     <Button className="h-6 text-[10px] px-3 font-semibold" asChild  >
                                         <Link href={`/events/${selectedEvent.id}`}>View</Link>
                                     </Button>
