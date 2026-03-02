@@ -50,8 +50,8 @@ io.on('connection', async socket => {
             broadcastToRoom(room, 'message', msg, socket);
             const { username, message } = msg;
             await pool.execute(
-                'INSERT INTO message_history VALUES (?, ?, ?, NOW())',
-                [room, username, message]
+                'INSERT INTO message_history VALUES (?, ?, ?, ?, NOW())',
+                [room, username, message, avatarUrl]
             );
         });
 
