@@ -49,6 +49,38 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
         init();
     }, [events.length, fetchEvents]);
 
+    // Fetch previous messages from database
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchPreviousMessages = async () => {
+            try {
+                const httpUrl = process.env.NEXT_PUBLIC_HTTP_URL || 'http://localhost:8081';
+                const response = await fetch(`${httpUrl}/messages?event=${id}`);
+                if (!response.ok) {
+                    console.error('Failed to fetch previous messages:', response.statusText);
+                    return;
+                }
+                const dbMessages = await response.json();
+
+                // Convert database messages to ChatMessage format
+                const formattedMessages: ChatMessage[] = dbMessages.map((msg: any) => ({
+                    author: msg.sender,
+                    content: msg.message,
+                    timestamp: new Date(msg.timestamp),
+                    isCurrentUser: msg.sender === session?.user?.name,
+                    avatarUrl: msg.avatar_url || undefined,
+                }));
+
+                setMessages(formattedMessages);
+            } catch (error) {
+                console.error('Error fetching previous messages:', error);
+            }
+        };
+
+        fetchPreviousMessages();
+    }, [id, session?.user?.name]);
+
     const event = events.find(e => e.id === id);
 
     const scrollToBottom = () => {
