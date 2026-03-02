@@ -1,6 +1,8 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import mysql from 'mysql2/promise';
+import express from 'express';
+import cors from 'cors';
 
 const server = createServer();
 const io = new Server(server, {
@@ -61,3 +63,21 @@ io.on('connection', async socket => {
 
 server.listen(8080);
 console.log('socket.io server listening on 8080!');
+
+const httpServer = express();
+httpServer.use(cors({
+    origin: ['http://localhost:3000']
+}));
+httpServer.use(express.json());
+
+httpServer.get('/messages', async (req, res) => {
+    const { event } = req.query;
+    const [rows] = await pool.execute(
+        'SELECT * FROM message_history WHERE room_id = ? ORDER BY timestamp ASC',
+        [event]
+    );
+
+    res.status(200).json(rows);
+});
+
+httpServer.listen(8081);
