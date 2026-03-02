@@ -33,15 +33,15 @@ function broadcastToRoom(room, msgType, msg, socketToExclude = null) {
 io.on('connection', async socket => {
 
     socket.on('join', msg => {
-        const { room, username } = msg;
+        const { room, username, avatarUrl } = msg;
         rooms[room] = rooms[room] ?? new Set();
         rooms[room].add(socket);
-        broadcastToRoom(room, 'join', { username }, socket);
+        broadcastToRoom(room, 'join', { username, avatarUrl }, socket);
 
 
         socket.on('disconnect', () => {
             rooms[room].delete(socket);
-            broadcastToRoom(room, 'leave', { username });
+            broadcastToRoom(room, 'leave', { username, avatarUrl });
         });
 
         socket.on('message', async msg => {
