@@ -9,6 +9,7 @@ import { MOCK_EVENTS } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import { Send, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useEventStore } from "@/lib/store";
 
 interface ChatMessage {
     author: string;
@@ -25,7 +26,8 @@ interface SystemMessage {
 
 export default function ChatPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const event = MOCK_EVENTS.find((e) => e.id === id);
+    const { events } = useEventStore();
+    const event = events.find(e => e.id === id);
     const [messages, setMessages] = useState<(ChatMessage | SystemMessage)[]>([]);
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
