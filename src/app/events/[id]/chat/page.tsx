@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation';
 import { Send, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useEventStore } from "@/lib/store";
+import { useSession } from "next-auth/react";
 
 interface ChatMessage {
     author: string;
@@ -28,6 +29,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
     const { id } = use(params);
     const { events } = useEventStore();
     const event = events.find(e => e.id === id);
+    const { data: session } = useSession();
     const [messages, setMessages] = useState<(ChatMessage | SystemMessage)[]>([]);
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
         socket.on('connect', () => {
             console.log('Connected to WebSocket server.');
             const room = event.id;
-            const username = `client-${Math.floor(Math.random() * 1000) + 1}`;
+            const username = session?.user?.name || `client-${Math.floor(Math.random() * 1000) + 1}`;
             usernameRef.current = username;
             socket.emit('join', { room, username });
         });
