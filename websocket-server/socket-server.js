@@ -5,9 +5,11 @@ import express from 'express';
 import cors from 'cors';
 
 const server = createServer();
+const allowed_origins = ['http://localhost:3000'];
+
 const io = new Server(server, {
     cors: {
-        origin: ['http://localhost:3000']
+        origin: allowed_origins
     }
 });
 
@@ -66,7 +68,7 @@ console.log('socket.io server listening on 8080!');
 
 const httpServer = express();
 httpServer.use(cors({
-    origin: ['http://localhost:3000']
+    origin: allowed_origins
 }));
 httpServer.use(express.json());
 
