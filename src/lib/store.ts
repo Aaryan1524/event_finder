@@ -17,6 +17,10 @@ interface EventState {
     setSelectedEvent: (id: string | null) => void;
     locateTrigger: number;
     triggerLocate: () => void;
+    zoomInTrigger: number;
+    triggerZoomIn: () => void;
+    zoomOutTrigger: number;
+    triggerZoomOut: () => void;
 
     // RSVPs (synced from Supabase, cached locally)
     myRsvps: string[];
@@ -81,6 +85,10 @@ export const useEventStore = create<EventState>()(
             setSelectedEvent: (id) => set({ selectedEventId: id }),
             locateTrigger: 0,
             triggerLocate: () => set((state) => ({ locateTrigger: state.locateTrigger + 1 })),
+            zoomInTrigger: 0,
+            triggerZoomIn: () => set((state) => ({ zoomInTrigger: state.zoomInTrigger + 1 })),
+            zoomOutTrigger: 0,
+            triggerZoomOut: () => set((state) => ({ zoomOutTrigger: state.zoomOutTrigger + 1 })),
 
             // ── RSVPs ─────────────────────────────────────────────────
             myRsvps: [],
@@ -146,5 +154,6 @@ export const useEventStore = create<EventState>()(
                 calendarEvents: state.calendarEvents,
             }),
         }
-    )
+    ),
+
 );
